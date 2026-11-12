@@ -254,22 +254,20 @@
 
   <script>
     // ==========================================
-    // 🔑 [비밀번호 설정] 1203으로 설정 완료
+    // 🔑 [비밀번호 설정] 1203으로 고정
     // ==========================================
     const ACCESS_PIN = '1203'; 
-    const SESSION_DURATION_MS = 10 * 60 * 1000; // 10분 (밀리초)
+    const SESSION_DURATION_MS = 10 * 60 * 1000; // 10분 세션 유지 시간
 
-    // 페이지 로드 시 10분이 지났는지 확인하여 보안 잠금 적용
+    // 페이지 로드 시 10분 이내 인증 여부 체크
     function checkSessionAuth() {
       const authTime = localStorage.getItem('secret_meal_auth_time');
       const now = Date.now();
       const lockScreen = document.getElementById('lockScreen');
 
       if (authTime && (now - parseInt(authTime, 10) < SESSION_DURATION_MS)) {
-        // 10분이 지나지 않았으면 잠금 화면 숨김
         lockScreen.classList.add('hidden');
       } else {
-        // 10분이 지났거나 인증 기록이 없으면 잠금 화면 표시
         lockScreen.classList.remove('hidden');
         document.getElementById('pinInput').focus();
       }
@@ -278,7 +276,6 @@
     function handleUnlock() {
       const pin = document.getElementById('pinInput').value;
       if (pin === ACCESS_PIN) {
-        // 인증 성공 시 현재 시간 저장
         localStorage.setItem('secret_meal_auth_time', Date.now().toString());
         document.getElementById('lockScreen').classList.add('hidden');
         document.getElementById('errorMsg').classList.add('hidden');
@@ -291,7 +288,6 @@
       }
     }
 
-    // 실행 시 즉시 세션 체크
     checkSessionAuth();
 
     const members = {
@@ -301,7 +297,7 @@
       chaeyoung: { name: '채영', emoji: '👧🏻', color: '#f59e0b' }
     };
 
-    // 기존 데이터 키(v8)를 유지하여 기존 기록 완벽 연동
+    // 🛡️ 기존 데이터 저장소 키(v8) 절대 변경 금지 (데이터 연동 보장)
     let records = JSON.parse(localStorage.getItem('secret_meal_records_v8') || 'null');
     if (!records) {
       records = [];

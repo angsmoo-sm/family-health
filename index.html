@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>그것이 알고 싶다 : 어젯밤, 식탁 앞의 밀회</title>
   
-  <!-- 카카오톡 등 SNS 공유 시 예쁜 미리보기가 뜨도록 설정한 오픈 그래프 태그 -->
   <meta property="og:title" content="그것이 알고 싶다 : 어젯밤, 식탁 앞의 밀회">
   <meta property="og:description" content="우리 가족의 따스하고 유쾌한 실시간 체중 및 성장 관리 다이어리 ✨">
   <meta property="og:image" content="https://fonts.gstatic.com/s/e/notoemoji/latest/1f50d/512.png">
@@ -117,26 +116,26 @@
       </div>
     </section>
 
-    <!-- 그래프 섹션 (3줄 필터: 줄별 파스텔톤 배경 및 독립 캡슐형 탭) -->
+    <!-- 그래프 섹션 (3줄 필터) -->
     <section class="glass-card rounded-2xl p-3.5 shadow-xs space-y-2.5">
       <div class="space-y-2">
-        <!-- 1줄: 항목 탭 (몸무게, 키, BMI) - 은은한 핑크 피치 톤 -->
+        <!-- 1줄: 항목 탭 -->
         <div class="flex bg-rose-50/80 p-1 rounded-xl text-xs font-bold w-full border border-rose-100/60 shadow-2xs">
           <button onclick="setMetricTab('weight')" id="tab-weight" class="flex-1 py-1.5 rounded-lg bg-white text-slate-800 shadow-xs transition">몸무게</button>
           <button onclick="setMetricTab('height')" id="tab-height" class="flex-1 py-1.5 rounded-lg text-rose-700/70 hover:text-rose-900 transition">키</button>
           <button onclick="setMetricTab('bmi')" id="tab-bmi" class="flex-1 py-1.5 rounded-lg text-rose-700/70 hover:text-rose-900 transition">BMI</button>
         </div>
 
-        <!-- 2줄: 가족 집중 필터 - 포근한 하늘빛 톤 -->
+        <!-- 2줄: 가족 필터 (통일된 이모지 적용) -->
         <div class="flex bg-sky-50/80 p-1 rounded-xl text-[11px] font-semibold overflow-x-auto border border-sky-100/60 shadow-2xs">
           <button onclick="setMemberFilter('all')" id="filter-all" class="flex-1 px-2 py-1 rounded-lg bg-white text-slate-800 shadow-xs transition whitespace-nowrap">전체</button>
-          <button onclick="setMemberFilter('dad')" id="filter-dad" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">아빠👨</button>
-          <button onclick="setMemberFilter('mom')" id="filter-mom" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">엄마👩</button>
-          <button onclick="setMemberFilter('minju')" id="filter-minju" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">민주👦</button>
-          <button onclick="setMemberFilter('chaeyoung')" id="filter-chaeyoung" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">채영👧</button>
+          <button onclick="setMemberFilter('dad')" id="filter-dad" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">아빠👨🏻</button>
+          <button onclick="setMemberFilter('mom')" id="filter-mom" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">엄마👩🏻</button>
+          <button onclick="setMemberFilter('minju')" id="filter-minju" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">민주👦🏻</button>
+          <button onclick="setMemberFilter('chaeyoung')" id="filter-chaeyoung" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">채영👧🏻</button>
         </div>
 
-        <!-- 3줄: 기간별 필터 - 산뜻한 에메랄드빛 톤 -->
+        <!-- 3줄: 기간별 필터 -->
         <div class="flex bg-emerald-50/80 p-1 rounded-xl text-[11px] font-semibold w-full border border-emerald-100/60 shadow-2xs">
           <button onclick="setChartFilter('all')" id="btn-all" class="flex-1 py-1 rounded-lg bg-white text-slate-800 shadow-xs transition">전체기간</button>
           <button onclick="setChartFilter('year')" id="btn-year" class="flex-1 py-1 rounded-lg text-emerald-700/70 hover:text-emerald-900 transition">1년</button>
@@ -150,7 +149,7 @@
       </div>
     </section>
 
-    <!-- 우리 가족 건강 기록부 (이틀치 8개 표시 + 스크롤) -->
+    <!-- 우리 가족 건강 기록부 -->
     <section class="glass-card rounded-2xl p-3.5 shadow-xs">
       <h2 class="text-xs font-bold text-slate-800 mb-2 flex items-center justify-between">
         <span class="flex items-center gap-1.5">📋 우리 가족 건강 기록부</span>
@@ -216,17 +215,18 @@
   </div>
 
   <script>
+    // 모든 곳에서 이모지를 완벽히 통일
     const members = {
-      dad: { name: '아빠', emoji: '👨', color: '#10b981' },
-      mom: { name: '엄마', emoji: '👩', color: '#ec4899' },
-      minju: { name: '민주', emoji: '👦', color: '#3b82f6' },
-      chaeyoung: { name: '채영', emoji: '👧', color: '#f59e0b' }
+      dad: { name: '아빠', emoji: '👨🏻', color: '#10b981' },
+      mom: { name: '엄마', emoji: '👩🏻', color: '#ec4899' },
+      minju: { name: '민주', emoji: '👦🏻', color: '#3b82f6' },
+      chaeyoung: { name: '채영', emoji: '👧🏻', color: '#f59e0b' }
     };
 
-    let records = JSON.parse(localStorage.getItem('secret_meal_records_v8') || 'null');
+    let records = JSON.parse(localStorage.getItem('secret_meal_records_v9') || 'null');
     if (!records) {
       records = [];
-      localStorage.setItem('secret_meal_records_v8', JSON.stringify(records));
+      localStorage.setItem('secret_meal_records_v9', JSON.stringify(records));
     }
 
     let currentFilter = 'all';
@@ -319,7 +319,7 @@
     }
 
     function saveAndRefresh() {
-      localStorage.setItem('secret_meal_records_v8', JSON.stringify(records));
+      localStorage.setItem('secret_meal_records_v9', JSON.stringify(records));
       updateUI();
     }
 

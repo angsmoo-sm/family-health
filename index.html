@@ -98,7 +98,7 @@
         </div>
       </div>
       <div id="syncStatus" class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"><span> 동기화 중
+        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> 동기화 중
       </div>
     </div>
   </header>
@@ -262,9 +262,9 @@
     const ACCESS_PIN = '1203'; 
     const SESSION_DURATION_MS = 10 * 60 * 1000; // 10분 세션
     
-    // 가족 공용 클라우드 동기화용 API 설정 (JSONBin 무료 저장소 활용)
-    const BIN_ID = '673a5a7ead1931442a83f982'; // 가족 전용 공용 저장고 ID
-    const API_KEY = '$2a$10$wN3d6sZt...'; // 공개 공유 저장소 연동
+    // 발급받으신 JSONBin 정보 반영 완료
+    const BIN_ID = '6af5c96cffd5d16053bc3cff'; 
+    const API_KEY = '$2a$10$pN2abuZabrcxtopT9dvFOeyg.QSUthHKe6e/OaDWO7w8QxXqX0aRq'; 
 
     function checkSessionAuth() {
       const authTime = localStorage.getItem('secret_meal_auth_time');
@@ -303,7 +303,6 @@
       chaeyoung: { name: '채영', emoji: '👧🏻', color: '#f59e0b' }
     };
 
-    // 로컬 기본값 및 클라우드 동기화 데이터 관리
     let records = JSON.parse(localStorage.getItem('secret_meal_records_v8') || '[]');
 
     // 실시간 동기화 데이터 불러오기 (서버 연동)
@@ -341,7 +340,6 @@
       }
     }
 
-    // 페이지 접속 시 및 주기적(10초마다) 자동 동기화 체크
     fetchCloudData();
     setInterval(fetchCloudData, 10000);
 
@@ -436,7 +434,7 @@
 
     function saveAndRefresh() {
       localStorage.setItem('secret_meal_records_v8', JSON.stringify(records));
-      syncToCloud(); // 서버 동기화 전송
+      syncToCloud();
       updateUI();
     }
 
@@ -555,7 +553,7 @@
       filteredRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
       const dates = [...new Set(filteredRecords.map(r => r.date))];
 
-      // 그래프 X축 날짜 범주를 26.11.12 양식으로 변환 (YYYY-MM-DD -> YY.MM.DD)
+      // 그래프 X축 날짜 범주 포맷 (26.11.12 양식)
       const formattedLabels = dates.map(dateStr => {
         if (!dateStr || dateStr.length < 10) return dateStr;
         const parts = dateStr.split('-');

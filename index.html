@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>그것이 알고 싶다 : 어젯밤, 식탁 앞의 밀회</title>
+  
+  <meta property="og:title" content="그것이 알고 싶다 : 어젯밤, 식탁 앞의 밀회">
+  <meta property="og:description" content="우리 가족의 따스하고 유쾌한 실시간 체중 및 성장 관리 다이어리">
+  <meta property="og:type" content="website">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+    
+    .pastel-header {
+      background: linear-gradient(135deg, #ffedd5 0%, #fce7f3 50%, #e0f2fe 100%);
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .profile-card {
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05);
+    }
+    .profile-card:active {
+      transform: scale(0.98);
+    }
+    
+    .card-avatar-img {
+      width: 2.7rem;
+      height: 2.7rem;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+  </style>
+</head>
+<body class="text-slate-700 min-h-screen pb-12">
+  
+  <!-- 상단 타이틀 영역 -->
+  <header class="pastel-header border-b border-rose-100 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-md mx-auto px-4 py-2.5 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-xl bg-rose-400 flex items-center justify-center text-white text-sm shadow-xs">
+          🔍
+        </div>
+        <div>
+          <h1 class="text-xs font-extrabold text-slate-800 leading-tight">그것이 알고 싶다 : 어젯밤, 식탁 앞의 밀회</h1>
+          <p class="text-[10px] text-slate-500 font-medium">우리 가족 포근한 건강 다이어리 ✨</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto px-3.5 py-4 space-y-4">
+    
+    <!-- 우리 가족 네임카드 섹션 -->
+    <section>
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1">
+          <span>💛</span> 우리 가족
+        </h2>
+        <span class="text-[10px] text-slate-400">카드를 눌러 기록을 남겨보세요</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <!-- 아빠 (깔끔한 3D 아빠 얼굴 적용) -->
+        <div onclick="openAddModal('dad', '아빠')" class="profile-card rounded-2xl px-3.5 py-3 cursor-pointer border border-emerald-100 flex items-center justify-between" style="background-color: #ecfdf5;">
+          <div>
+            <div class="text-sm font-bold text-emerald-800 mb-0.5">아빠</div>
+            <div id="card-weight-dad" class="text-lg font-black text-slate-800 leading-tight">- kg</div>
+            <div id="card-diff-dad" class="text-[11px] text-slate-500 font-medium">기록 대기중</div>
+          </div>
+          <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f468_1f3fb/512.png" alt="아빠" class="card-avatar-img">
+        </div>
+
+        <!-- 엄마 (조화로운 3D 엄마 얼굴 적용) -->
+        <div onclick="openAddModal('mom', '엄마')" class="profile-card rounded-2xl px-3.5 py-3 cursor-pointer border border-rose-100 flex items-center justify-between" style="background-color: #fff1f2;">
+          <div>
+            <div class="text-sm font-bold text-rose-800 mb-0.5">엄마</div>
+            <div id="card-weight-mom" class="text-lg font-black text-slate-800 leading-tight">- kg</div>
+            <div id="card-diff-mom" class="text-[11px] text-slate-500 font-medium">기록 대기중</div>
+          </div>
+          <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f469_1f3fb/512.png" alt="엄마" class="card-avatar-img">
+        </div>
+
+        <!-- 민주 -->
+        <div onclick="openAddModal('minju', '민주')" class="profile-card rounded-2xl px-3.5 py-3 cursor-pointer border border-blue-100 flex items-center justify-between" style="background-color: #eff6ff;">
+          <div>
+            <div class="text-sm font-bold text-blue-800 mb-0.5">민주</div>
+            <div id="card-weight-minju" class="text-lg font-black text-slate-800 leading-tight">- kg</div>
+            <div id="card-diff-minju" class="text-[11px] text-slate-500 font-medium">기록 대기중</div>
+          </div>
+          <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f466_1f3fb/512.png" alt="민주" class="card-avatar-img">
+        </div>
+
+        <!-- 채영 -->
+        <div onclick="openAddModal('chaeyoung', '채영')" class="profile-card rounded-2xl px-3.5 py-3 cursor-pointer border border-amber-100 flex items-center justify-between" style="background-color: #fefce8;">
+          <div>
+            <div class="text-sm font-bold text-amber-800 mb-0.5">채영</div>
+            <div id="card-weight-chaeyoung" class="text-lg font-black text-slate-800 leading-tight">- kg</div>
+            <div id="card-diff-chaeyoung" class="text-[11px] text-slate-500 font-medium">기록 대기중</div>
+          </div>
+          <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f467_1f3fb/512.png" alt="채영" class="card-avatar-img">
+        </div>
+      </div>
+    </section>
+
+    <!-- 그래프 섹션 (3줄 필터: 줄별 파스텔톤 배경 및 독립 캡슐형 탭) -->
+    <section class="glass-card rounded-2xl p-3.5 shadow-xs space-y-2.5">
+      <div class="space-y-2">
+        <!-- 1줄: 항목 탭 (몸무게, 키, BMI) - 은은한 핑크 피치 톤 -->
+        <div class="flex bg-rose-50/80 p-1 rounded-xl text-xs font-bold w-full border border-rose-100/60 shadow-2xs">
+          <button onclick="setMetricTab('weight')" id="tab-weight" class="flex-1 py-1.5 rounded-lg bg-white text-slate-800 shadow-xs transition">몸무게</button>
+          <button onclick="setMetricTab('height')" id="tab-height" class="flex-1 py-1.5 rounded-lg text-rose-700/70 hover:text-rose-900 transition">키</button>
+          <button onclick="setMetricTab('bmi')" id="tab-bmi" class="flex-1 py-1.5 rounded-lg text-rose-700/70 hover:text-rose-900 transition">BMI</button>
+        </div>
+
+        <!-- 2줄: 가족 집중 필터 - 포근한 하늘빛 톤 -->
+        <div class="flex bg-sky-50/80 p-1 rounded-xl text-[11px] font-semibold overflow-x-auto border border-sky-100/60 shadow-2xs">
+          <button onclick="setMemberFilter('all')" id="filter-all" class="flex-1 px-2 py-1 rounded-lg bg-white text-slate-800 shadow-xs transition whitespace-nowrap">전체</button>
+          <button onclick="setMemberFilter('dad')" id="filter-dad" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">아빠👨</button>
+          <button onclick="setMemberFilter('mom')" id="filter-mom" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">엄마👩</button>
+          <button onclick="setMemberFilter('minju')" id="filter-minju" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">민주👦</button>
+          <button onclick="setMemberFilter('chaeyoung')" id="filter-chaeyoung" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">채영👧</button>
+        </div>
+
+        <!-- 3줄: 기간별 필터 - 산뜻한 에메랄드빛 톤 -->
+        <div class="flex bg-emerald-50/80 p-1 rounded-xl text-[11px] font-semibold w-full border border-emerald-100/60 shadow-2xs">
+          <button onclick="setChartFilter('all')" id="btn-all" class="flex-1 py-1 rounded-lg bg-white text-slate-800 shadow-xs transition">전체기간</button>
+          <button onclick="setChartFilter('year')" id="btn-year" class="flex-1 py-1 rounded-lg text-emerald-700/70 hover:text-emerald-900 transition">1년</button>
+          <button onclick="setChartFilter('month')" id="btn-month" class="flex-1 py-1 rounded-lg text-emerald-700/70 hover:text-emerald-900 transition">1달</button>
+          <button onclick="setChartFilter('week')" id="btn-week" class="flex-1 py-1 rounded-lg text-emerald-700/70 hover:text-emerald-900 transition">1주일</button>
+        </div>
+      </div>
+
+      <div class="relative h-56 w-full">
+        <canvas id="familyChart"></canvas>
+      </div>
+    </section>
+
+    <!-- 우리 가족 건강 기록부 (이틀치 8개 표시 + 스크롤) -->
+    <section class="glass-card rounded-2xl p-3.5 shadow-xs">
+      <h2 class="text-xs font-bold text-slate-800 mb-2 flex items-center justify-between">
+        <span class="flex items-center gap-1.5">📋 우리 가족 건강 기록부</span>
+        <span class="text-[10px] text-slate-400 font-normal">가족 4인 실시간 기록</span>
+      </h2>
+      <div class="overflow-x-auto max-h-[340px] overflow-y-auto rounded-xl border border-slate-100">
+        <table class="w-full text-left text-xs">
+          <thead class="sticky top-0 bg-slate-50/90 backdrop-blur-xs shadow-2xs z-10">
+            <tr class="text-slate-400 font-medium border-b border-slate-200">
+              <th class="py-2 px-2">날짜</th>
+              <th class="py-2 px-2">가족</th>
+              <th class="py-2 px-2">몸무게 / 키 / BMI</th>
+              <th class="py-2 px-2 text-right">관리</th>
+            </tr>
+          </thead>
+          <tbody id="archiveTableBody" class="divide-y divide-slate-100 bg-white">
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 기록 추가 / 수정 모달 -->
+  <div id="logModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-xl space-y-3.5 animate-in fade-in zoom-in-95 duration-150">
+      <div class="flex items-center justify-between">
+        <h3 id="modalTitle" class="text-sm font-bold text-slate-800">건강 기록</h3>
+        <button onclick="closeLogModal()" class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="logForm" onsubmit="handleFormSubmit(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="modalRecordId">
+        <input type="hidden" id="modalMemberId">
+        <div>
+          <label class="block font-semibold text-slate-500 mb-1">기록 날짜 (어제 데이터도 입력 가능)</label>
+          <input type="date" id="inputDate" required class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-400 font-bold text-sm bg-slate-50">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-500 mb-1">몸무게 (kg)</label>
+          <input type="number" step="0.1" id="inputWeight" required placeholder="예: 65.5" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-400 font-bold text-sm">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-500 mb-1">키 / 신장 (cm)</label>
+          <input type="number" step="0.1" id="inputHeight" required placeholder="예: 175.0" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-400 font-bold text-sm">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-500 mb-1">어젯밤의 한마디 (밀회 톡)</label>
+          <input type="text" id="inputNote" placeholder="예: 야식 먹은 건 비밀..." class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-400">
+        </div>
+        
+        <div class="pt-1 flex gap-2">
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-rose-400 hover:bg-rose-500 text-white font-bold shadow-xs transition">
+            저장하기 ✨
+          </button>
+          <button type="button" id="deleteBtnInModal" onclick="deleteRecordFromModal()" class="hidden px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-500 font-semibold transition" title="기록 삭제">
+            <i class="fa-solid fa-trash-can"></i> 삭제
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const members = {
+      dad: { name: '아빠', emoji: '👨', color: '#10b981' },
+      mom: { name: '엄마', emoji: '👩', color: '#ec4899' },
+      minju: { name: '민주', emoji: '👦', color: '#3b82f6' },
+      chaeyoung: { name: '채영', emoji: '👧', color: '#f59e0b' }
+    };
+
+    let records = JSON.parse(localStorage.getItem('secret_meal_records_v8') || 'null');
+    if (!records) {
+      records = [];
+      localStorage.setItem('secret_meal_records_v8', JSON.stringify(records));
+    }
+
+    let currentFilter = 'all';
+    let currentMetric = 'weight';
+    let currentMemberFilter = 'all';
+    let familyChart = null;
+
+    function openAddModal(memberId, memberName) {
+      document.getElementById('modalRecordId').value = '';
+      document.getElementById('modalMemberId').value = memberId;
+      document.getElementById('modalTitle').innerText = `${members[memberId].emoji} ${memberName} 건강 기록 남기기`;
+      document.getElementById('inputDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('inputWeight').value = '';
+      document.getElementById('inputHeight').value = '';
+      document.getElementById('inputNote').value = '';
+      document.getElementById('deleteBtnInModal').classList.add('hidden');
+      document.getElementById('logModal').classList.remove('hidden');
+      document.getElementById('logModal').classList.add('flex');
+    }
+
+    function openEditModal(recordId) {
+      const record = records.find(r => r.id === recordId);
+      if (!record) return;
+      const m = members[record.memberId] || { name: '가족', emoji: '💛' };
+
+      document.getElementById('modalRecordId').value = record.id;
+      document.getElementById('modalMemberId').value = record.memberId;
+      document.getElementById('modalTitle').innerText = `${m.emoji} ${m.name} 기록 수정하기`;
+      document.getElementById('inputDate').value = record.date;
+      document.getElementById('inputWeight').value = record.weight;
+      document.getElementById('inputHeight').value = record.height;
+      document.getElementById('inputNote').value = record.note || '';
+      document.getElementById('deleteBtnInModal').classList.remove('hidden');
+      document.getElementById('logModal').classList.remove('hidden');
+      document.getElementById('logModal').classList.add('flex');
+    }
+
+    function closeLogModal() {
+      document.getElementById('logModal').classList.remove('flex');
+      document.getElementById('logModal').classList.add('hidden');
+    }
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const recordId = document.getElementById('modalRecordId').value;
+      const memberId = document.getElementById('modalMemberId').value;
+      const date = document.getElementById('inputDate').value;
+      const weight = parseFloat(document.getElementById('inputWeight').value);
+      const height = parseFloat(document.getElementById('inputHeight').value);
+      const note = document.getElementById('inputNote').value.trim() || '특이사항 없음';
+
+      const heightInM = height / 100;
+      const bmi = parseFloat((weight / (heightInM * heightInM)).toFixed(1));
+
+      if (recordId) {
+        const index = records.findIndex(r => r.id === recordId);
+        if (index !== -1) {
+          records[index] = { ...records[index], date, memberId, weight, height, bmi, note };
+        }
+      } else {
+        const newRecord = {
+          id: Date.now().toString(),
+          date,
+          memberId,
+          weight,
+          height,
+          bmi,
+          note
+        };
+        records.push(newRecord);
+      }
+
+      saveAndRefresh();
+      closeLogModal();
+
+      confetti({
+        particleCount: 70,
+        spread: 50,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function deleteRecordFromModal() {
+      const recordId = document.getElementById('modalRecordId').value;
+      if (confirm('이 기록을 정말 삭제하시겠습니까?')) {
+        records = records.filter(r => r.id !== recordId);
+        saveAndRefresh();
+        closeLogModal();
+      }
+    }
+
+    function saveAndRefresh() {
+      localStorage.setItem('secret_meal_records_v8', JSON.stringify(records));
+      updateUI();
+    }
+
+    function updateUI() {
+      Object.keys(members).forEach(id => {
+        const memberRecords = records.filter(r => r.memberId === id).sort((a, b) => new Date(b.date) - new Date(a.date));
+        const weightEl = document.getElementById(`card-weight-${id}`);
+        const diffEl = document.getElementById(`card-diff-${id}`);
+
+        if (memberRecords.length > 0) {
+          const latest = memberRecords[0];
+          weightEl.innerText = `${latest.weight.toFixed(1)} kg`;
+
+          if (memberRecords.length > 1) {
+            const prev = memberRecords[1].weight;
+            const diff = latest.weight - prev;
+            if (diff > 0) {
+              diffEl.innerHTML = `<span class="text-rose-500 font-bold">+${diff.toFixed(1)}kg 📈</span>`;
+            } else if (diff < 0) {
+              diffEl.innerHTML = `<span class="text-emerald-500 font-bold">${diff.toFixed(1)}kg ✨</span>`;
+            } else {
+              diffEl.innerText = `변화 없음 (-)`;
+            }
+          } else {
+            diffEl.innerText = `첫 기록 완료!`;
+          }
+        } else {
+          weightEl.innerText = `- kg`;
+          diffEl.innerText = `기록 대기중`;
+        }
+      });
+
+      const tbody = document.getElementById('archiveTableBody');
+      tbody.innerHTML = '';
+      const sortedAll = [...records].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (sortedAll.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400">아직 등록된 기록이 없습니다.<br>위의 가족 카드를 눌러 첫 기록을 남겨보세요! ✨</td></tr>`;
+      } else {
+        sortedAll.forEach(r => {
+          const m = members[r.memberId] || { name: '알 수 없음', emoji: '❓' };
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50/80 transition';
+          tr.innerHTML = `
+            <td class="py-2.5 px-2 text-slate-500 font-medium">${r.date.slice(5)}</td>
+            <td class="py-2.5 px-2 font-bold text-slate-800">${m.emoji} ${m.name}</td>
+            <td class="py-2.5 px-2 text-slate-800"><b>${r.weight.toFixed(1)}kg</b> / ${r.height.toFixed(1)}cm / <span class="text-rose-600 font-semibold">BMI ${r.bmi}</span></td>
+            <td class="py-2.5 px-2 text-right">
+              <button onclick="openEditModal('${r.id}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 font-semibold transition text-[11px]">
+                수정
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      renderChart();
+    }
+
+    function setMetricTab(metric) {
+      currentMetric = metric;
+      ['weight', 'height', 'bmi'].forEach(m => {
+        const btn = document.getElementById(`tab-${m}`);
+        if (m === metric) {
+          btn.className = 'flex-1 py-1.5 rounded-lg bg-white text-slate-800 shadow-xs transition';
+        } else {
+          btn.className = 'flex-1 py-1.5 rounded-lg text-rose-700/70 hover:text-rose-900 transition';
+        }
+      });
+      renderChart();
+    }
+
+    function setMemberFilter(memberId) {
+      currentMemberFilter = memberId;
+      ['all', 'dad', 'mom', 'minju', 'chaeyoung'].forEach(id => {
+        const btn = document.getElementById(`filter-${id}`);
+        if (id === memberId) {
+          btn.className = 'flex-1 px-2 py-1 rounded-lg bg-white text-slate-800 shadow-xs transition whitespace-nowrap';
+        } else {
+          btn.className = 'flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap';
+        }
+      });
+      renderChart();
+    }
+
+    function setChartFilter(filter) {
+      currentFilter = filter;
+      ['all', 'year', 'month', 'week'].forEach(f => {
+        const btn = document.getElementById(`btn-${f}`);
+        if (f === filter) {
+          btn.className = 'flex-1 py-1 rounded-lg bg-white text-slate-800 shadow-xs transition';
+        } else {
+          btn.className = 'flex-1 py-1 rounded-lg text-emerald-700/70 hover:text-emerald-900 transition';
+        }
+      });
+      renderChart();
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('familyChart').getContext('2d');
+      
+      let filteredRecords = [...records];
+      const now = new Date();
+      if (currentFilter === 'week') {
+        const weekAgo = new Date(now.setDate(now.getDate() - 7));
+        filteredRecords = filteredRecords.filter(r => new Date(r.date) >= weekAgo);
+      } else if (currentFilter === 'month') {
+        const monthAgo = new Date(now.setMonth(now.getMonth() - 1));
+        filteredRecords = filteredRecords.filter(r => new Date(r.date) >= monthAgo);
+      } else if (currentFilter === 'year') {
+        const yearAgo = new Date(now.setFullYear(now.getFullYear() - 1));
+        filteredRecords = filteredRecords.filter(r => new Date(r.date) >= yearAgo);
+      }
+
+      filteredRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+      const dates = [...new Set(filteredRecords.map(r => r.date))];
+
+      const targetMembers = currentMemberFilter === 'all' ? Object.keys(members) : [currentMemberFilter];
+
+      const datasets = targetMembers.map(id => {
+        const m = members[id];
+        const data = dates.map(date => {
+          const match = filteredRecords.find(r => r.date === date && r.memberId === id);
+          if (!match) return null;
+          if (currentMetric === 'weight') return match.weight;
+          if (currentMetric === 'height') return match.height;
+          if (currentMetric === 'bmi') return match.bmi;
+          return null;
+        });
+
+        return {
+          label: `${m.emoji} ${m.name}`,
+          data: data,
+          borderColor: m.color,
+          backgroundColor: m.color,
+          borderWidth: 2.5,
+          tension: 0.2,
+          spanGaps: true
+        };
+      });
+
+      if (familyChart) {
+        familyChart.destroy();
+      }
+
+      familyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: dates.length > 0 ? dates : ['기록 없음'],
+          datasets: dates.length > 0 ? datasets : [{ label: '데이터 없음', data: [], borderColor: '#cbd5e1' }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 10, font: { family: 'Pretendard', size: 11 } }
+            },
+            tooltip: {
+              usePointStyle: true,
+              backgroundColor: 'rgba(30, 41, 59, 0.9)',
+              titleColor: '#f8fafc',
+              bodyColor: '#f1f5f9',
+              padding: 10,
+              cornerRadius: 12,
+              titleFont: { family: 'Pretendard', size: 12, weight: 'bold' },
+              bodyFont: { family: 'Pretendard', size: 11 },
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) label += ': ';
+                  if (context.parsed.y !== null) {
+                    const val = context.parsed.y;
+                    if (currentMetric === 'weight') label += val.toFixed(1) + ' kg';
+                    else if (currentMetric === 'height') label += val.toFixed(1) + ' cm';
+                    else if (currentMetric === 'bmi') label += 'BMI ' + val.toFixed(1);
+                  }
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: { color: '#f1f5f9' },
+              ticks: { font: { family: 'Pretendard', size: 10 } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Pretendard', size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>

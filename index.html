@@ -46,6 +46,27 @@
   </style>
 </head>
 <body class="text-slate-700 min-h-screen pb-12">
+
+  <!-- 비밀번호 잠금 화면 오버레이 -->
+  <div id="lockScreen" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-500 flex items-center justify-center text-xl mx-auto shadow-xs">
+        🔒
+      </div>
+      <div>
+        <h2 class="text-base font-bold text-slate-800">우리 가족 건강 기록부</h2>
+        <p class="text-xs text-slate-400 mt-1">접속 비밀번호를 입력해주세요</p>
+      </div>
+      
+      <div class="space-y-3">
+        <input type="password" id="pinInput" maxlength="6" placeholder="비밀번호 입력" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-center text-lg font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-rose-400 bg-slate-50" onkeydown="if(event.key === 'Enter') handleUnlock()">
+        <button onclick="handleUnlock()" class="w-full py-3 rounded-xl bg-rose-400 hover:bg-rose-500 text-white font-bold text-xs shadow-md transition">
+          입장하기 ✨
+        </button>
+      </div>
+      <p id="errorMsg" class="text-[11px] text-rose-500 font-semibold hidden">비밀번호가 틀렸습니다! 다시 확인해주세요.</p>
+    </div>
+  </div>
   
   <!-- 상단 타이틀 영역 -->
   <header class="pastel-header border-b border-rose-100 sticky top-0 z-30 shadow-xs">
@@ -126,7 +147,7 @@
           <button onclick="setMetricTab('bmi')" id="tab-bmi" class="flex-1 py-1.5 rounded-lg text-rose-700/70 hover:text-rose-900 transition">BMI</button>
         </div>
 
-        <!-- 2줄: 가족 필터 (통일된 이모지 적용) -->
+        <!-- 2줄: 가족 필터 -->
         <div class="flex bg-sky-50/80 p-1 rounded-xl text-[11px] font-semibold overflow-x-auto border border-sky-100/60 shadow-2xs">
           <button onclick="setMemberFilter('all')" id="filter-all" class="flex-1 px-2 py-1 rounded-lg bg-white text-slate-800 shadow-xs transition whitespace-nowrap">전체</button>
           <button onclick="setMemberFilter('dad')" id="filter-dad" class="flex-1 px-2 py-1 rounded-lg text-sky-700/70 hover:text-sky-900 transition whitespace-nowrap">아빠👨🏻</button>
@@ -215,7 +236,23 @@
   </div>
 
   <script>
-    // 모든 곳에서 이모지를 완벽히 통일
+    // ==========================================
+    // 🔑 [비밀번호 설정] 여기서 언제든지 비번을 변경할 수 있습니다!
+    // ==========================================
+    const ACCESS_PIN = '1234'; 
+
+    function handleUnlock() {
+      const pin = document.getElementById('pinInput').value;
+      if (pin === ACCESS_PIN) {
+        document.getElementById('lockScreen').remove();
+      } else {
+        const errorEl = document.getElementById('errorMsg');
+        errorEl.classList.remove('hidden');
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinInput').focus();
+      }
+    }
+
     const members = {
       dad: { name: '아빠', emoji: '👨🏻', color: '#10b981' },
       mom: { name: '엄마', emoji: '👩🏻', color: '#ec4899' },
@@ -223,10 +260,11 @@
       chaeyoung: { name: '채영', emoji: '👧🏻', color: '#f59e0b' }
     };
 
-    let records = JSON.parse(localStorage.getItem('secret_meal_records_v9') || 'null');
+    // 기존 데이터가 저장되어 있던 v8 키를 그대로 사용하여 기존 기록이 바로 연동되도록 설정
+    let records = JSON.parse(localStorage.getItem('secret_meal_records_v8') || 'null');
     if (!records) {
       records = [];
-      localStorage.setItem('secret_meal_records_v9', JSON.stringify(records));
+      localStorage.setItem('secret_meal_records_v8', JSON.stringify(records));
     }
 
     let currentFilter = 'all';
@@ -319,7 +357,7 @@
     }
 
     function saveAndRefresh() {
-      localStorage.setItem('secret_meal_records_v9', JSON.stringify(records));
+      localStorage.setItem('secret_meal_records_v8', JSON.stringify(records));
       updateUI();
     }
 

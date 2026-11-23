@@ -98,7 +98,7 @@
         </div>
       </div>
       <div id="syncStatus" class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> 동기화 중
+        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> 접속 로드
       </div>
     </div>
   </header>
@@ -259,7 +259,7 @@
     // ==========================================
     // 🔑 [비밀번호 및 동기화 설정]
     // ==========================================
-    const ACCESS_PIN = '1203'; 
+    const ACCESS_PIN = '1203';
     const SESSION_DURATION_MS = 10 * 60 * 1000; // 10분 세션
     
     // 발급받으신 JSONBin 정보 반영 완료
@@ -305,7 +305,7 @@
 
     let records = JSON.parse(localStorage.getItem('secret_meal_records_v8') || '[]');
 
-    // 실시간 동기화 데이터 불러오기 (서버 연동)
+    // 접속 시 1회 데이터 불러오기 (수동 새로고침 시 재실행)
     async function fetchCloudData() {
       try {
         const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
@@ -324,7 +324,7 @@
       }
     }
 
-    // 클라우드 서버로 데이터 실시간 업로드 (동기화)
+    // 클라우드 서버로 데이터 업로드
     async function syncToCloud() {
       try {
         await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
@@ -341,7 +341,6 @@
     }
 
     fetchCloudData();
-    setInterval(fetchCloudData, 10000);
 
     let currentFilter = 'all';
     let currentMetric = 'weight';
@@ -362,7 +361,7 @@
 
       document.getElementById('inputWeight').value = '';
       
-      // 🟢 직전 기록의 키 데이터를 자동으로 가져와서 입력란에 채우기 (없으면 빈칸)
+      // 직전 기록의 키 데이터를 자동으로 가져와서 입력란에 채우기 (없으면 빈칸)
       const memberRecords = records.filter(r => r.memberId === memberId).sort((a, b) => new Date(b.date) - new Date(a.date));
       if (memberRecords.length > 0 && memberRecords[0].height) {
         document.getElementById('inputHeight').value = memberRecords[0].height;
